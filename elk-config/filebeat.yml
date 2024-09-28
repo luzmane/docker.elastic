@@ -1,0 +1,103 @@
+filebeat.inputs:
+  # - type: filestream
+  #   id: default-filestream
+  #   paths:
+  #     - ingest_data/*.log
+  - type: filestream
+    id: modsec
+    paths:
+      - ingest_data/modsec/*.json
+    parsers:
+      - ndjson:
+
+setup.dashboards.enabled: true
+
+setup.ilm.enabled: false
+
+setup.template.enabled: false
+setup.template.name: "filebeat-"
+setup.template.pattern: "filebeat-*"
+
+setup.template.json.enabled: true
+setup.template.json.path: "/usr/share/filebeat/filebeat_template.json"
+setup.template.json.name: "filebeat-"
+setup.template.json.data_stream: false
+
+setup.dsl.enabled: false
+
+
+
+# https://www.elastic.co/guide/en/beats/filebeat/current/filtering-and-enhancing-data.html
+processors:
+  - timestamp:
+      field: transaction.time_stamp
+      timezone: "Asia/Jerusalem"
+      layouts:
+        - 'Mon Jan 02 15:04:05 2006'
+      test:
+        - 'Fri Sep 27 10:41:38 2024'
+        - 'Thu Sep 26 20:21:11 2024'
+  - drop_fields:
+      fields: [transaction.time_stamp]
+
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /usr/share/filebeat/ingest_data/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0640
+
+setup.kibana:
+  host: ${KIBANA_HOSTS}
+  username: ${ELASTIC_USER}
+  password: ${ELASTIC_PASSWORD}
+
+output.elasticsearch:
+  hosts: ${ELASTIC_HOSTS}
+  username: ${ELASTIC_USER}
+  password: ${ELASTIC_PASSWORD}
+  ssl.enabled: true
+  ssl.certificate_authorities: "certs/ca/ca.crt"
+  #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
+
+
+
+
+# https://www.elastic.co/guide/en/beats/filebeat/current/configuration-autodiscover.html
+# autodiscover.providers:
+#   - type: docker
+#     templates:
+#       - condition.contains:
+#           docker.container.image: nginx
+#         config:
+#           - type: log
+#             paths:
+#               - "/mnt/logs/${data.docker.container.id}/*.log"
+#-------------------
+# providers:
+#   - type: docker
+#     templates:
+#       - condition:
+#           contains:
+#             docker.container.image: redis
+#         config:
+#           - type: container
+#             paths:
+#               - /var/lib/docker/containers/${data.docker.container.id}/*.log
+#             exclude_lines: ["^\\s+[\\-`('.|_]"]  # drop asciiart lines
+#-------------------
+# providers:
+#   - type: docker
+#     templates:
+#       - condition:
+#           contains:
+#             docker.container.image: redis
+#         config:
+#           - module: redis
+#             log:
+#               input:
+#                 type: container
+#                 paths:
+#                   - /var/lib/docker/containers/${data.docker.container.id}/*.log

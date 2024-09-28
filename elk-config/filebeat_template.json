@@ -1,0 +1,178 @@
+{
+  "mappings": {
+      "_meta": {
+          "beat": "filebeat",
+          "version": "8.15.2"
+      },
+      "properties": {
+          "@timestamp": {
+              "type": "date"
+          },
+          "transaction": {
+              "properties": {
+                  "client_ip": {
+                      "type": "ip"
+                  },
+                  "client_port": {
+                      "type": "integer"
+                  },
+                  "host_ip": {
+                      "type": "ip"
+                  },
+                  "host_port": {
+                      "type": "integer"
+                  },
+                  "server_id": {
+                      "type": "text"
+                  },
+                  "unique_id": {
+                      "type": "text"
+                  },
+                  "request": {
+                      "properties": {
+                          "method": {
+                              "type": "text"
+                          },
+                          "http_version": {
+                              "type": "version"
+                          },
+                          "uri": {
+                              "type": "text"
+                          },
+                          "headers": {
+                              "properties": {
+                                  "Accept": {
+                                      "type": "text"
+                                  },
+                                  "Accept-Encoding": {
+                                      "type": "text"
+                                  },
+                                  "Accept-Language": {
+                                      "type": "text"
+                                  },
+                                  "Cache-Control": {
+                                      "type": "text"
+                                  },
+                                  "Connection": {
+                                      "type": "text"
+                                  },
+                                  "Content-Length": {
+                                      "type": "text"
+                                  },
+                                  "Content-Type": {
+                                      "type": "text"
+                                  },
+                                  "Cookie": {
+                                      "type": "text"
+                                  },
+                                  "Host": {
+                                      "type": "text"
+                                  },
+                                  "Icy-MetaData": {
+                                      "type": "text"
+                                  },
+                                  "Origin": {
+                                      "type": "text"
+                                  },
+                                  "Priority": {
+                                      "type": "text"
+                                  },
+                                  "Range": {
+                                      "type": "text"
+                                  },
+                                  "Referer": {
+                                      "type": "text"
+                                  },
+                                  "Upgrade-Insecure-Requests": {
+                                      "type": "text"
+                                  },
+                                  "User-Agent": {
+                                      "type": "text"
+                                  }
+                              }
+                          }
+                      }
+                  },
+                  "response": {
+                      "properties": {
+                          "body": {
+                              "type": "text"
+                          },
+                          "http_code": {
+                              "type": "integer"
+                          }
+                      }
+                  },
+                  "messages": {
+                      "type": "nested",
+                      "properties": {
+                          "details": {
+                              "properties": {
+                                  "accuracy": {
+                                      "type": "integer"
+                                  },
+                                  "data": {
+                                      "type": "text"
+                                  },
+                                  "file": {
+                                      "type": "text"
+                                  },
+                                  "lineNumber": {
+                                      "type": "integer"
+                                  },
+                                  "match": {
+                                      "type": "text"
+                                  },
+                                  "maturity": {
+                                      "type": "integer"
+                                  },
+                                  "rev": {
+                                      "type": "text"
+                                  },
+                                  "ruleId": {
+                                      "type": "text"
+                                  },
+                                  "severity": {
+                                      "type": "text"
+                                  },
+                                  "tags": {
+                                      "type": "nested"
+                                  },
+                                  "ver": {
+                                      "type": "text"
+                                  }
+                              }
+                          },
+                          "message": {
+                              "type": "text"
+                          }
+                      }
+                  },
+                  "producer": {
+                      "properties": {
+                          "components": {
+                              "type": "text"
+                          },
+                          "connector": {
+                              "type": "text"
+                          },
+                          "modsecurity": {
+                              "type": "text"
+                          },
+                          "secrules_engine": {
+                              "type": "nested"
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  },
+  "aliases": {
+      "all_modsec": {}
+  },
+  "lifecycle": {
+      "enabled": true,
+      "data_retention": "60d"
+  }
+}
